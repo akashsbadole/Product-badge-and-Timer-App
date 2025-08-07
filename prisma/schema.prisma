@@ -1,13 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
-}
 
 //datasource db {
  // provider = "postgresql"
@@ -39,14 +29,55 @@ model Session {
 }
 
 model Badge {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(cuid())
   shop        String
   productId   String
-  badgeText   String
-  badgeColor  String   @default("#ff6b6b")
-  textColor   String   @default("#ffffff")
+  variantId   String?
+  text        String
+  color       String   @default("#ffffff")
+  backgroundColor String @default("#ff6b6b")
   position    String   @default("top-left")
+  shape       String   @default("rectangle")
+  fontSize    Int      @default(12)
+  isActive    Boolean  @default(true)
+  priority    Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([shop, productId, variantId, id])
+}
+
+model Timer {
+  id          String   @id @default(cuid())
+  shop        String
+  productId   String
+  variantId   String?
+  endDate     DateTime
+  message     String   @default("Limited Time Offer!")
+  textColor   String   @default("#ffffff")
+  backgroundColor String @default("#ff4444")
+  position    String   @default("bottom")
+  showDays    Boolean  @default(true)
+  showHours   Boolean  @default(true)
+  showMinutes Boolean  @default(true)
+  showSeconds Boolean  @default(true)
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@unique([shop, productId, variantId, id])
+}
+
+model Settings {
+  id                    String  @id @default(cuid())
+  shop                  String  @unique
+  enableBadges         Boolean @default(true)
+  enableTimers         Boolean @default(true)
+  enableInventoryUrgency Boolean @default(true)
+  inventoryThreshold   Int     @default(10)
+  defaultBadgePosition String  @default("top-left")
+  defaultTimerPosition String  @default("bottom")
+  mobileOptimized      Boolean @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 }
