@@ -16,7 +16,7 @@ export const shopify = shopifyApp({
           {
             plan: "Product Enhancer Pro",
             interval: BillingInterval.Every30Days,
-            amount: 9.99,
+            amount: free,
             currencyCode: "USD",
           },
         ],
